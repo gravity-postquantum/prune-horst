@@ -1,0 +1,60 @@
+\chapter{Introduction}\label{chap:introduction}
+
+\gravity is a hash-based \emph{few-time signature scheme}, meaning that it's only secure for a limited number of messages---a dozen, hundreds, or thousands, depending on the version.
+
+This limitation allows \gravity to be relatively simple and efficient. It's also \emph{stateless}, as required by NIST.
+
+\gravity is based on Hash to Obtain Random Subset, or HORS, a stateless few-time signature scheme proposed by Reyzin and Reyzin in 2002~\cite{hors}. Like HORST---a variant of HORS introduced for the SPHINCS construction by Bernstein et al. in 2015~\cite{sphincs}---\gravity reduces HORS' public key size thanks to a Merkle tree. The prefix \textsf{PRUNE} summarizes additional tricks to optimize HORS' security and efficiency:
+\begin{itemize}
+\item A \emph{pseudo-random} generator is used rather than just a hash function in order to obtain a random subset of a set of integers.
+\item The pseudo-random generator allows to ensure that the subset elements are \emph{unique}, which increases the security of the scheme (see~\cite[\S4]{masters} and~\cite{subsetres}
+\item The Merkle tree is \emph{pruned} in order to trade signature size for public key size, by eliminating redundant key nodes, similarly to what SPHINCS does to minimize the signature size.
+\end{itemize}
+
+\section{Advantages and Limitations}
+
+Advantages:
+\begin{itemize}
+
+\item \textbf{Simple}: \gravity is much simpler than hash-based signature schemes such as SPHINCS or XMSS, and than signatures schemes from other post-quantum families. The logic of the scheme fits in about 200 lines of C code.
+
+\item \textbf{High-assurance}: Security essentially depends on the collision resistance of hash functions, an assumption unlikely to fail for the proposed functions. \gravity also leverages our detailed analysis and bounds detailed in~\cite[\S4]{masters} and~\cite{subsetres}.
+
+\item \textbf{Speed/security trade-offs} are easily done by varying the parameters $T$ and $K$. For a given choice of $T$ and $K$, an additional parameter $C$ allows to reduce the signature size at the cost of a larger public key.
+
+\item \textbf{Forgeries detection}: If the limit of messages to be signed is exceeded, thereby making forgeries easier, the legitimate signer can detect such forgeries. Obviously, a signature forged by stealing the secret key couldn't be detected.
+
+\item \textbf{Almost optimal}: the signature size can be further reduced by eliminating redundancies, as is our recent Octopus technique~\cite[\S5]{masters}, however by default \gravity avoids the extra complexity and uses suboptimal-length signatures.
+
+\end{itemize}
+
+Limitations:
+
+\begin{itemize}
+
+\item \textbf{Few-time}: Only a limited number of messages can be signed while retaining the highest security guarantees: about 100 or about 1000, depending on the instance. If more messages than the limit are signed, then security slowly degrades.
+
+\item \textbf{Signature size}: Signatures aren't small, but they can be made smaller by using larger public keys. This trade-off has no security impact, and makes signing faster as the public key size grows.
+
+\end{itemize}
+
+
+\section{Motivations}
+
+A few-time signature scheme allowing only for hundreds or thousands of
+distinct messages to be signed is sufficient in a number of major
+applications, such as:
+root CAs signing intermediate CA certificates; signing of firmware or bootloader images for long-lived devices; protocols using ephemeral signing keys (as mpOTR did); identify management for device provisioning, for example in messaging applications.
+
+Another class of application would use few-time signatures to enforce a bound in the number of authorized signatures.
+For example, a bank might issue a digital checkbook limited to 100 transactions.
+Would a client issues more than the authorized 100 signatures, they would reduce their own security and thereby allow an attacker to forge signatures on their behalf.
+
+
+We chose HORS(T) as a basis because it's the most efficient few-time signature construction, and because of its simplicity.
+
+Primitives in \gravity are SHA-256, AES-256-CTR, and Haraka\,v2~\cite{haraka}.
+The latter is not a NIST standard, because we needed a fast, short-input hash function and NIST doesn't provide such a primitive.
+Haraka\,v2 hashes 32- or 64-byte input values and produces a 32-byte hash value.
+It is based on the AES round function and optimized implementations use AES-NIs.
+We chose Haraka\,v2 with 6 rounds, rather than the default 5 round, for a greater assurance against collisions.

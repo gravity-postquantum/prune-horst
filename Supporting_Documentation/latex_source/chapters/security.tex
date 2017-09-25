@@ -1,0 +1,75 @@
+\chapter{Security}\label{chap:security}
+
+\section{Expected Strength}
+
+Non-repudiation and unforgeability can be broken by finding any SHA-256 collision, since messages are SHA-256-hashed before being signed.
+\gravity may also be broken if \hashx and \hashy are not collision resistant.
+This puts \gravity in NIST's security category 2: ``Any attack that breaks the relevant security definition must require computational resources comparable to or greater than those required for collision search on a 256-bit hash function (e.g. SHA256/ SHA3-256)''.
+
+Attacks that would break \gravity by searching for a subset of known subkeys fall into NIST's category 5, however: ``Any attack that breaks the relevant security definition must require computational resources comparable to or greater than those required for key search on a block cipher with a 256-bit key (e.g. AES 256)''.
+
+Below we detail the later type of attacks.
+
+\section{Known Attacks}\label{sec:attacks}
+
+The main attack on \gravity works as follows:
+\begin{enumerate}
+
+    \item Observe $N$ signatures in order to collect at most $N\times K$ subkeys, and on average $(T^{NK} - (T-1)^{NK}) / T^{NK-1}$. Call the corresponding subset of indices $\mathcal{I}$.
+    \item Search for a message $M$ and a signature seed $S$ such that the $K$ indices obtained by subset generation belong to $\mathcal I$, which happens with probability $(\vert\mathcal{I}\vert / T)^K$.
+    \item Once a pair $(M,S)$ is found at step 2, construct the signature using the subkeys collected in step 1. The signature will be valid even though the signature seed was not derived from the secret key.
+\end{enumerate}
+
+Classically, the expected number of attempts before forging a signature is therefore
+\[
+\left(\frac{T}{\vert \mathcal I\vert}\right)^K = \frac{T^{NK^2}}{(T^{NK} - (T-1)^{NK})^K}
+\]
+where each attempt involves approximately $K/2$ AES calls in order to generate $K$ indices (since a 16-byte blocks provides at most 4 indices).
+
+The classical security level against this attack is therefore, in bits:
+\[
+NK^2 \log T - K \log(T^{NK} - (T-1)^{NK}) + \log K - 2
+\]
+where $N$ is the number of messages signed.
+
+A quantum attack using Grover's algorithm would require quadratically fewer attempts (approximately, and using a quantum circuit), thus a lower bound is
+\[
+(NK^2 \log T - K \log(T^{NK} - (T-1)^{NK}))/2 + \log K - 2
+\]
+
+For \gravity instances in Table~\ref{tab:instances}, with $N$ set to the defined message limit, instances S, M, L respectively have
+\begin{itemize}
+    \item Classical security levels 243.76, 253.82, 248.72
+    \item Quantum security bounds 123.86, 128.79, 126.36
+\end{itemize}
+Figure~\ref{fig:security} shows the degradation of security as the number of signatures grows.
+ 
+
+\begin{figure}
+%\includegraphics[width=14cm]{graph_classical}
+%\includegraphics[width=14cm]{graph_quantum}
+\centering\input{img/security_classical.tikz}
+\centering\input{img/security_quantum.tikz}
+\caption{Security level in bits of \gravity instances against classical and quantum attacks exploiting the subkeys revealed in previous signatures. Quantum attacks use Grover search to get a quadratic speed-up over classical attacks.}
+\label{fig:security}
+\end{figure}
+
+\subsection{Other Attacks}
+
+Fault attacks or side-channel attacks could recover $\sk_1$ in the subset generation if the AES implementation is not protected.
+Likewise $\sk_2$ could be recovered during the computation of $S=\hashz(\sk_2 \Vert \hashx(M))$ if $\hashz$ is not protected.
+
+Fault attacks could also force subset generation to return indices of specific subkeys.
+
+Timing attacks are unlikely if the implementations of functions processing $\sk_1$ and $\sk_2$ are time-constant (AES, Haraka-v2).
+
+
+\section{Forgery Detection}\label{sec:detection}
+
+In the attack described in \S\ref{sec:attacks} the attacker chooses the signature seed $S$ but can't pick $S=\hashz(\sk_2 \Vert \hashx(M))$, as prescribed by the signing procedure.
+Yet the signature will be verified, and only the legitimate signer can determine that $S$ wasn't properly chosen using $\sk_2$.
+EdDSA (and Ed25519) have a similar property of invalid-yet-valid signatures.
+
+This property allows a signer to detect signatures forged after exploiting a (too) high number of issued signatures, compared with legitimately computed signatures.
+But it can't be used to prove the existence of forgeries to a third-party, since the signer could have themselves used an invalid signature seed in order to break non-repudiation.
+If the signer is trusted, however, then they can reveal $\sk_2$ privately in order to show evidence of a forgery.

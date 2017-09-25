@@ -1,0 +1,142 @@
+\documentclass[11pt,a4paper]{report}
+\setcounter{secnumdepth}{3} % default is 2
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{graphicx}
+\graphicspath{ {img/} }
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
+\usepackage{a4wide}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage[noline]{algorithm2e}
+\usepackage{siunitx}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
+%\usepackage[sc]{mathpazo}
+\usepackage[default,osfigures,scale=0.95]{opensans}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+
+\usepackage{cmbright}
+\SetSymbolFont{largesymbols}{normal}{OMX}{iwona}{m}{n}
+
+
+\usepackage{titlesec}
+\titleformat{\chapter}
+  {\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
+  \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus
+  .2ex}
+
+\usepackage[nottoc]{tocbibind}
+\usepackage{microtype}
+\usepackage{mathtools}
+
+\usepackage[capitalize]{cleveref}
+
+\crefformat{section}{\S#2#1#3}
+\crefmultiformat{section}{\S\S#2#1#3}{ and~#2#1#3}{, #2#1#3}{, and~#2#1#3}
+
+\hfuzz=3pt
+\setlength\parindent{0pt}
+\setlength{\parskip}{1em}
+\setcounter{tocdepth}{2}
+
+\definecolor{green}{RGB}{0,140,0}
+\definecolor{blue}{RGB}{0,89,153}
+\definecolor{yellow}{RGB}{250,150,0}
+\definecolor{red}{RGB}{255,76,25}
+
+% predefined LaTeX colors
+\newcommand{\tcg}[1]{\textcolor{green}{#1}}
+\newcommand{\tcb}[1]{\textcolor{blue}{#1}}
+\newcommand{\tcr}[1]{\textcolor{red}{#1}}
+\newcommand{\tcy}[1]{\textcolor{yellow}{#1}}
+
+\definecolor{GREEN}{RGB}{204,235,204}
+\definecolor{BLUE}{RGB}{178,201,232}
+\definecolor{RED}{RGB}{232,178,178}
+\definecolor{YELLOW}{RGB}{255,252,204}
+
+\newcommand{\tcng}[1]{\textcolor{GREEN}{#1}}
+\newcommand{\tcnb}[1]{\textcolor{BLUE}{#1}}
+\newcommand{\tcnr}[1]{\textcolor{RED}{#1}}
+\newcommand{\tcny}[1]{\textcolor{YELLOW}{#1}}
+
+
+% abbreviations
+\newcommand\NOT {\texttt{NOT}\xspace}
+\newcommand\OR {\texttt{OR}\xspace}
+\newcommand\AND {\texttt{AND}\xspace}
+\newcommand\XOR {\texttt{XOR}\xspace}
+\newcommand\NAND {\texttt{NAND}\xspace}
+\newcommand\NOR {\texttt{NOR}\xspace}
+\newcommand\TODO{\textbf{TODO}\xspace}
+
+\newcommand{\gravity}{\ensuremath{\textsf{PRUNE-HORST}}\xspace}
+\newcommand{\hashx}{\ensuremath{\textsf{Hash}}\xspace}
+\newcommand{\hashy}{\ensuremath{\textsf{Hash32}}\xspace}
+\newcommand{\hashz}{\ensuremath{\textsf{Hash64}}\xspace}
+\newcommand{\drbg}{AES-256-CTR\xspace}
+\newcommand{\sk}{\ensuremath{\mathsf{sk}}\xspace}
+\newcommand{\ek}{\ensuremath{\mathsf{ek}}\xspace}
+\newcommand{\pk}{\ensuremath{\mathsf{pk}}\xspace}
+\newcommand{\sig}{\ensuremath{\mathsf{sig}}\xspace}
+
+\newcommand{\hex}[1]{\texttt{#1}}
+\newcommand{\xhex}[1]{\scalebox{0.75}{\texttt{#1}}}
+
+\newcommand{\NN}{\ensuremath{\mathbb{N}}}
+\newcommand{\FF}{\ensuremath{\mathbb{F}}}
+
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\newtheorem{assumption}{Assumption}
+\newtheorem{claim}{Claim}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+
+% Global algorithm2e configs
+\DontPrintSemicolon
+\SetArgSty{rmfamily}
+\SetNlSty{rmfamily}{}{.}
+\SetKwFor{For}{\nl for}{do}{\nl end}
+\SetKwIF{If}{ElseIf}{Else}{\nl if}{then}{\nl elif}{\nl else}{\nl end}%
+\SetKw{Input}{Inputs:}
+\SetKw{Output}{Outputs:}
+\SetKw{Algorithm}{Algorithm:}
+
+
+\begin{document}
+
+\input{chapters/firstpage}
+
+\tableofcontents
+\newpage
+
+\input{chapters/introduction}
+\input{chapters/specification}
+\input{chapters/security}
+\input{chapters/performance}
+
+\bibliographystyle{plainurl}
+\bibliography{bib}
+
+
+% \input notes %replace with todo
+
+\end{document}

@@ -1,0 +1,69 @@
+
+\begin{tikzpicture}
+  \begin{axis}[title=Tradeoffs signature length / public key length,
+    width=12cm,
+    height=10cm,
+    xlabel=Public key bytes,
+    ylabel=Signature bytes,
+    ytick distance=5000,
+    xtick distance=500,
+    xmin=0,
+    xmax=4192,
+    ymin=15000,
+    ymax=45000,
+    x tick label style={
+      /pgf/number format/.cd,
+      set thousands separator={}
+    },
+    scaled y ticks=false,
+    y tick label style={
+      /pgf/number format/.cd,
+      set thousands separator={}
+    },
+    grid style={help lines,dotted},
+    grid=major
+  ]
+
+\addplot[magenta,mark=*] coordinates {
+(64, 38944.000000)
+(128, 36896.000000)
+(256, 34848.000000)
+(512, 32800.000000)
+(1024, 30752.000000)
+(2048, 28704.000000)
+(4096, 26656.000000)
+};
+\addlegendentry{L};
+\addplot[black,mark=*] coordinates {
+(64, 35744.000000)
+(128, 33760.000000)
+(256, 31776.000000)
+(512, 29792.000000)
+(1024, 27808.000000)
+(2048, 25824.000000)
+(4096, 23840.000000)
+};
+\addlegendentry{M};
+\addplot[cyan,mark=*] coordinates {
+(64, 29408.000000)
+(128, 27680.000000)
+(256, 25952.000000)
+(512, 24224.000000)
+(1024, 22496.000000)
+(2048, 20768.000000)
+(4096, 19040.000000)
+};
+\addlegendentry{S};
+\addplot[only marks,mark=triangle*,mark size=4pt,magenta] coordinates {
+(4096, 26656.000000)
+};
+\addplot[only marks,mark=triangle*,mark size=4pt,black] coordinates {
+(4096, 23840.000000)
+};
+\addplot[only marks,mark=triangle*,mark size=4pt,cyan] coordinates {
+(2048, 20768.000000)
+};
+
+  \end{axis}
+\end{tikzpicture}
+
