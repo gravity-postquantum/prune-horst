@@ -1,4 +1,4 @@
-SRC=aes.c haraka.c sign.c
+SRC=aes.c haraka.c sign.c randombytes.c
 BINS=gen_ivs_* bench
 IVSFILE=IntermediateValues.txt
 
