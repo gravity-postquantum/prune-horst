@@ -41,7 +41,7 @@ Operation & ID & AES-256 & Haraka-256 & Haraka-512 & AES rounds \\
 \bottomrule
 \end{tabular}
 
-\caption{Complexity of \gravity instances, where AES-256 does 14 rounds per block, Haraka-256 does 24 AES rounds, and Haraka-512 does 48. The count of AES-256 blocks for subset generation is an upper bound.}
+\caption{Complexity of \gravity instances, counting the number of calls to each primitive. AES-256 does 14 rounds per block, Haraka-256 does 24 AES rounds, and Haraka-512 does 48. The count of AES-256 blocks for subset generation is an upper bound.}
 \label{tab:complexity}
 \end{table}
 
@@ -169,7 +169,7 @@ This saves $2T$ calls to AES-256, or $28T$ AES rounds, or 28\% of the total AES 
 \subsection{32-Byte Public Keys with Octopus}
 
 Authentication paths in a signature may contain several times the same value, if paths from two leaves merge and therefore have the same authentication paths from this point.
-To avoid these redundancies and offer optimally short signatures, we analyzed this trick---called ``Octopus''--in~\cite[Ch.5]{masters}, and developed tools to compute the expected number of hashes required in an authentication path.
+To avoid these redundancies and offer optimally short signatures, we analyzed this trick---called ``Octopus''--in~\cite[Ch.5]{masters} and~\cite[\S3.5]{improving}, and developed tools to compute the expected number of hashes required in an authentication path.
 Indeed, the amount of redundancy depends on the choice of the $K$ indices, and therefore a signature's length will depend on the message hashed.
 
 Since most redundancies will occur in the higher levels of the tree, Octopus can be used to create optimally short signatures while having a single subtree root in the public key ($C=1$), and therefore a 32-byte public key.
