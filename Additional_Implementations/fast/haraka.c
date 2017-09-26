@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2016 kste
+Copyright (c) 2016 Stefan Kölbl
 original Haraka implementations
 
 Copyright (c) 2017 Nagravision S.A.

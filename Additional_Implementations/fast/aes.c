@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2017 Nagravision S.A.
+ */
+
 #include "aes.h"
 #include <smmintrin.h>
 #include <stdio.h>

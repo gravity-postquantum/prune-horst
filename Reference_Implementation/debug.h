@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2017 Nagravision S.A.
+ */
+
 #pragma once
 
 #include "sign.h" /* for definition of N */
