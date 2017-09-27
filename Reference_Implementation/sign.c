@@ -59,8 +59,7 @@ static void getsubset (int *subset, const uint8_t *mhash, const uint8_t *seed) {
 
 
 void expandsk (uint8_t *ek, const uint8_t *sk) {
-    uint8_t iv[DRBG_IVLEN];
-    memset (iv, 0, DRBG_IVLEN);
+    uint8_t iv[DRBG_IVLEN] = {0};
     DRBG (ek, sk, iv, EKLEN);
 }
 
