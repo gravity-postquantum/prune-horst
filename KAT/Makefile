@@ -1,6 +1,7 @@
 BIN=nist_kats
 KATFILES=PQCsignKAT_64.rsp PQCsignKAT_64.req
-SRCPATH=../Additional_Implementations/fast/
+#SRCPATH=../Additional_Implementations/fast/
+SRCPATH=../Reference_Implementation/
 
 CFLAGS=-O2 -march=native -Wall -Wextra -pedantic -std=c99
 LDFLAGS=-lcrypto

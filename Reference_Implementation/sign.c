@@ -25,7 +25,7 @@ static void getsubset (int *subset, const uint8_t *mhash, const uint8_t *seed) {
 #define STREAMLEN 8 * K /* count twice as many indexes as needed */
     uint8_t tohash[2 * N];
     uint8_t subset_seed[N];
-    uint8_t iv[N];
+    uint8_t iv[DRBG_IVLEN] = { 0 };
     uint8_t randstream[STREAMLEN];
     int index, duplicate, i, count = 0;
     size_t offset = 0;
@@ -33,7 +33,6 @@ static void getsubset (int *subset, const uint8_t *mhash, const uint8_t *seed) {
     HCPY (tohash, seed);
     HCPY (tohash + N, mhash);
     HASH64 (subset_seed, tohash);
-    memset (iv, 1, DRBG_IVLEN);
     DRBG (randstream, subset_seed, iv, STREAMLEN);
 
 #ifdef DEBUG

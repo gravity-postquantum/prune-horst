@@ -31,13 +31,11 @@ A [Makefile](Reference_Implementation/Makefile) is included in [Reference_Implem
 ```
 $ make
 Please choose a target:
-        ivs              generates intermediate values using the fast code
-        check            verifies intermediate values using the fast code
-        checkref         verifies intermediate values using the reference code
+        ivs              generates intermediate values
+        check            verifies intermediate values
         bench            runs speed benchmarks
         analyze          runs static analyzers
         format           formats the code using .clang-format rules
-        cloc             counts lines of code
         clean            cleans up, except intermediate values file
 ```
 

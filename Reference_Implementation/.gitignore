@@ -1,5 +1,4 @@
-gen_ivs_sanitized
-gen_ivs_release
+gen_ivs
 bench
 IntermediateValues.txt*
 *.o
