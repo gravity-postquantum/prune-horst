@@ -8,9 +8,6 @@
 #include <string.h>
 #include <wmmintrin.h>
 
-#ifdef DEBUG
-#include <assert.h>
-#endif
 
 static __m128i assist256_1 (__m128i a, __m128i b) {
     __m128i c = _mm_setzero_si128 ();

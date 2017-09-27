@@ -14,11 +14,6 @@
 #include "randombytes.h"
 #endif
 
-#ifdef DEBUG
-#include "debug.h"
-#include <assert.h>
-#endif
-
 
 static void getsubset (int *subset, const uint8_t *mhash, const uint8_t *seed) {
 #define BYTES_PER_INDEX 4
@@ -35,15 +30,7 @@ static void getsubset (int *subset, const uint8_t *mhash, const uint8_t *seed) {
     HASH64 (subset_seed, tohash);
     DRBG (randstream, subset_seed, iv, STREAMLEN);
 
-#ifdef DEBUG
-    PBYTES ("getsubset: subset seed", subset_seed, N);
-#endif
-
     while (count < K) {
-#ifdef DEBUG
-        /* shouldn't happen unless insecure parameters */
-        assert (offset <= STREAMLEN - BYTES_PER_INDEX);
-#endif
         /* ok to take mod since T is a power of 2 */
         index = U8TO32 (randstream + offset) % T;
         offset += BYTES_PER_INDEX;
@@ -59,7 +46,7 @@ static void getsubset (int *subset, const uint8_t *mhash, const uint8_t *seed) {
 
 
 void expandsk (uint8_t *ek, const uint8_t *sk) {
-    uint8_t iv[DRBG_IVLEN] = {0};
+    uint8_t iv[DRBG_IVLEN] = { 0 };
     DRBG (ek, sk, iv, EKLEN);
 }
 
@@ -70,20 +57,11 @@ int genpk (uint8_t *pk, const uint8_t *sk) {
     int hashes = T;
     uint8_t *ek = NULL;
 
-#ifdef DEBUG
-    PBYTES ("genpk: sk", (uint8_t *)sk, SKLEN);
-#endif
-
     ek = malloc (T * N);
     if (!ek) return 1;
 
     /* expand sk to T subkeys */
     expandsk (ek, sk);
-
-#ifdef DEBUG
-    /* only show first values to minimize the file size */
-    PBYTES ("genpk: ek[0..63]", ek, 64);
-#endif
 
     /* hash the T hashed subkeys */
     for (j = 0; j < T; ++j) HASH32 (ek + (j * N), ek + (j * N));
@@ -97,9 +75,6 @@ int genpk (uint8_t *pk, const uint8_t *sk) {
 
     memcpy (pk, ek, PKLEN);
     free (ek);
-#ifdef DEBUG
-    PBYTES ("genpk: pk", pk, PKLEN);
-#endif
     return 0;
 }
 
@@ -129,25 +104,14 @@ int crypto_sign_cached (unsigned char *sm,
     /* hash the message with SHA-256 */
     HASH (mhash, m, mlen);
 
-#ifdef DEBUG
-    PBYTES ("crypto_sign: mhash", mhash, N);
-#endif
-
     /* compute a subset from the message hash and secret key */
     HCPY (tohash, sk2);
     HCPY (tohash + N, mhash);
     HASH64 (signature_seed, tohash);
 
-#ifdef DEBUG
-    PBYTES ("crypto_sign: signature_seed", signature_seed, N);
-#endif
-
     getsubset (subset, mhash, signature_seed);
     HCPY (sm + mlen, signature_seed);
 
-#ifdef DEBUG
-    PINTS ("crypto_sign: subset", subset, K);
-#endif
 
     /* append subkeys from the subset to the signature */
     subkeys = SUBKEYS (sm + mlen);
@@ -155,9 +119,6 @@ int crypto_sign_cached (unsigned char *sm,
         index = subset[i];
         HCPY (subkeys + (i * N), ek + (index * N));
     }
-#ifdef DEBUG
-    PBYTES ("crypto_sign: subkeys", subkeys, N * K);
-#endif
 
     /* buffer to store the tree's nodes */
     buf = malloc (T * N);
@@ -177,19 +138,12 @@ int crypto_sign_cached (unsigned char *sm,
             HCPY (paths + (K * N * l) + (i * N), buf + sibling * N);
             subset[i] = subset[i] / 2;
         }
-#ifdef DEBUG
-        PBYTES ("crypto_sign: K siblings", paths + (K * N * l), K * N);
-#endif
         hashes = hashes / 2;
         for (i = 0; i < hashes; ++i) HASH64 (buf + (i * N), buf + (2 * i * N));
     }
 
     memmove (sm, m, mlen);
     *smlen = mlen + SIGLEN;
-
-#ifdef DEBUG
-    PBYTES ("crypto_sign: sm+mlen", sm + mlen, SIGLEN);
-#endif
 
     free (buf);
     return 0;
@@ -209,10 +163,6 @@ int crypto_sign (unsigned char *sm,
     ek = malloc (EKLEN);
     if (!ek) return 1;
     expandsk (ek, sk);
-#ifdef DEBUG
-    PBYTES ("crypto_sign: m", (uint8_t *)m, mlen);
-    PBYTES ("crypto_sign: sk", (uint8_t *)sk, 2 * N);
-#endif
     ret = crypto_sign_cached (sm, smlen, m, mlen, sk + N, ek);
     free (ek);
     return ret;
@@ -232,11 +182,6 @@ int crypto_sign_open (unsigned char *m,
     const uint8_t *subkeys = NULL;
     const uint8_t *paths = NULL;
 
-#ifdef DEBUG
-    PBYTES ("crypto_sign_open: sm", (uint8_t *)sm, smlen);
-    PBYTES ("crypto_sign_open: pk", (uint8_t *)pk, PKLEN);
-#endif
-
     /* sanity checks */
     if (!sm || !m || !pk || smlen < SIGLEN) return 1;
 
@@ -247,16 +192,8 @@ int crypto_sign_open (unsigned char *m,
     /* hash the message with SHA-256 */
     HASH (mhash, sm, smlen - SIGLEN);
 
-#ifdef DEBUG
-    PBYTES ("crypto_sign_open: mhash", mhash, N);
-#endif
-
     /* compute a subset from the message hash and the subset seed */
     getsubset (subset, mhash, sm + *mlen);
-
-#ifdef DEBUG
-    PINTS ("crypto_sign_open: subset", subset, K);
-#endif
 
     /* compute the tree's root for each of the K subset leaves, using nodes from
      * the auth path */
@@ -276,10 +213,6 @@ int crypto_sign_open (unsigned char *m,
             HASH64 (tmp, buf);
             index = index / 2;
         }
-
-#ifdef DEBUG
-        PBYTES ("crypto_sign_open: root", tmp, N);
-#endif
 
         /* check that the root matches the node stored in the pubkey */
         if (!memcmp (pk + (index * N), tmp, N)) continue;

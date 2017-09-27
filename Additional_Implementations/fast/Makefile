@@ -1,5 +1,4 @@
 SRC=aes.c haraka.c sign.c randombytes.c
-BINS=gen_ivs bench
 IVSFILE=IntermediateValues.txt
 
 FLAGS_ALL=-std=c89 -pedantic -Wall -Wextra -Wno-long-long -march=native -lcrypto  
@@ -25,22 +24,10 @@ all: help
 
 help:
 			@echo "Please choose a target:"
-			@echo "\tivs\t\t generates intermediate values"
-			@echo "\tcheck\t\t verifies intermediate values"
 			@echo "\tbench\t\t runs speed benchmarks"
 			@echo "\tanalyze\t\t runs static analyzers"
 			@echo "\tformat\t\t formats the code using .clang-format rules"
-			@echo "\tclean\t\t cleans up, except intermediate values file"
-
-check:		$(SRC) gen_ivs.c $(IVSFILE)
-			@$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) -DDEBUG $(SRC) gen_ivs.c -o gen_ivs
-			@./gen_ivs > $(IVSFILE)_tmp
-			@diff $(IVSFILE) $(IVSFILE)_tmp ; if [ $$? -ne 0 ] ; then echo "error" ; else echo "ok" ; fi
-			@rm -f $(IVSFILE)_tmp
-
-ivs:		$(SRC) gen_ivs.c
-			$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) -DDEBUG $^ -o gen_ivs
-			./gen_ivs > $(IVSFILE)
+			@echo "\tclean\t\t cleans up"
 
 bench:		$(SRC) bench.c
 			$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) $^ -o bench
@@ -50,7 +37,7 @@ format:
 			clang-format -i *.c *.h
 
 clean:
-			rm -rf $(BINS) *.dSYM
+			rm -rf bench *.dSYM
 
 cleanall:	clean
 			rm -rf $(IVSFILE)
@@ -61,4 +48,4 @@ analyze:
 			cppclean .
 			rm -f *.o
 	
-.PHONY: bench format clean checks
+.PHONY: bench format clean
