@@ -37,7 +37,7 @@ format:
 			clang-format -i *.c *.h
 
 clean:
-			rm -rf bench *.dSYM
+			rm -rf bench *.dSYM *.o
 
 cleanall:	clean
 			rm -rf $(IVSFILE)

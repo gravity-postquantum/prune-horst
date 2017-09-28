@@ -50,7 +50,7 @@ format:
 			clang-format -i *.c *.h
 
 clean:
-			rm -rf $(BINS) *.dSYM
+			rm -rf $(BINS) *.dSYM *.o
 
 cleanall:	clean
 			rm -rf $(IVSFILE)
