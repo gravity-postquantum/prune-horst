@@ -1,5 +1,4 @@
 SRC=aes.c haraka.c sign.c randombytes.c
-IVSFILE=IntermediateValues.txt
 
 FLAGS_ALL=-std=c89 -pedantic -Wall -Wextra -Wno-long-long -march=native -lcrypto  
 
@@ -24,12 +23,12 @@ all: help
 
 help:
 			@echo "Please choose a target:"
-			@echo "\tbench\t\t runs speed benchmarks"
 			@echo "\tanalyze\t\t runs static analyzers"
-			@echo "\tformat\t\t formats the code using .clang-format rules"
+			@echo "\tbench\t\t runs speed benchmarks"
 			@echo "\tclean\t\t cleans up"
+			@echo "\tformat\t\t formats the code using .clang-format rules"
 
-bench:		$(SRC) bench.c
+bench:		        $(SRC) bench.c
 			$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) $^ -o bench
 			./bench
 
@@ -38,9 +37,6 @@ format:
 
 clean:
 			rm -rf bench *.dSYM *.o
-
-cleanall:	clean
-			rm -rf $(IVSFILE)
 
 analyze:
 			cppcheck . --std=c89

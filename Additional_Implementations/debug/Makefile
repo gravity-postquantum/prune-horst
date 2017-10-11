@@ -25,24 +25,24 @@ all: help
 
 help:
 			@echo "Please choose a target:"
-			@echo "\tivs\t\t generates intermediate values"
-			@echo "\tcheck\t\t verifies intermediate values"
-			@echo "\tbench\t\t runs speed benchmarks"
 			@echo "\tanalyze\t\t runs static analyzers"
-			@echo "\tformat\t\t formats the code using .clang-format rules"
+			@echo "\tcheck\t\t verifies intermediate values"
 			@echo "\tclean\t\t cleans up, except intermediate values file"
+			@echo "\tbench\t\t runs speed benchmarks"
+			@echo "\tformat\t\t formats the code using .clang-format rules"
+			@echo "\tivs\t\t generates intermediate values"
 
-check:		$(SRC) gen_ivs.c $(IVSFILE)
+check:		        $(SRC) gen_ivs.c $(IVSFILE)
 			@$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) -DDEBUG $(SRC) gen_ivs.c -o gen_ivs
 			@./gen_ivs > $(IVSFILE)_tmp
 			@diff $(IVSFILE) $(IVSFILE)_tmp ; if [ $$? -ne 0 ] ; then echo "error" ; else echo "ok" ; fi
 			@rm -f $(IVSFILE)_tmp
 
-ivs:		$(SRC) gen_ivs.c
+ivs:		        $(SRC) gen_ivs.c
 			$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) -DDEBUG $^ -o gen_ivs
 			./gen_ivs > $(IVSFILE)
 
-bench:		$(SRC) bench.c
+bench:		        $(SRC) bench.c
 			$(CC) $(FLAGS_RELEASE) $(VERSION_FLAGS) $^ -o bench
 			./bench
 
@@ -52,7 +52,7 @@ format:
 clean:
 			rm -rf $(BINS) *.dSYM *.o
 
-cleanall:	clean
+cleanall:	        clean
 			rm -rf $(IVSFILE)
 
 analyze:
