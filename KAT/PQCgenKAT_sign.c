@@ -22,7 +22,7 @@ int		FindMarker(FILE *infile, const char *marker);
 int		ReadHex(FILE *infile, unsigned char *A, int Length, char *str);
 void	fprintBstr(FILE *fp, char *S, unsigned char *A, unsigned long long L);
 
-char    AlgName[] = "My Alg Name";
+char    AlgName[] = "PRUNE-HORST";
 
 int
 main()
