@@ -25,7 +25,7 @@ PRUNE-HORST is a stateless hash-based signature scheme designed by Jean-Philippe
 
 * [Additional_Implementations/fast](Additional_Implementations/fast): Our fast C89 implementation, with AES-NI and SIMD instructions.
 
-* [Additional_Implementations/debug](Additional_Implementations/debug): A version of the fast implementation that prints intermediate values, includes files for each of the three PRUNE-HORST versions.
+* [Additional_Implementations/debug](Additional_Implementations/debug): A version of the fast implementation that prints intermediate values.  This directory includes intermediate values files for each of the three PRUNE-HORST versions.
 
 The directory [Optimized_Implementation/](Optimized_Implementation) contains a placeholder referring to the code under [Reference_Implementation/](Reference_Implementation), since our optimized implementation (as per NIST's requirements) is the same as our reference implementation.
 
@@ -33,10 +33,10 @@ The [Makefile](Reference_Implementation/Makefile) included in the [reference](Re
 ```
 $ make
 Please choose a target:
-        bench            runs speed benchmarks
         analyze          runs static analyzers
+        bench            runs speed benchmarks
+        clean            cleans up
         format           formats the code using .clang-format rules
-        clean            cleans up, except intermediate values file
 ```
 Warning: `make bench` with the [reference](Reference_Implementation) implementation is slow because of the textbook AES implementation.
 
