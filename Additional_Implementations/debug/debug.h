@@ -32,7 +32,7 @@
 static void printints (int *x, size_t xlen) {
     size_t i;
     for (i = 0; i < xlen; ++i) {
-        printf ("%d", x[i]);
+        printf ("%d ", x[i]);
     }
     printf ("\n");
 }
