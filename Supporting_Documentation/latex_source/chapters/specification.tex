@@ -110,7 +110,7 @@ Given a secret key $\sk=\sk_1\Vert \sk_2$ and a message $M$, \gravity computes a
 
 \item Compute the binary hash tree up to level $1 + \log C$ like for public key generation, but recording the \emph{authentication paths} for each of the $K$ leaves from the subset, as follows:
 \begin{enumerate}
-\item Hash each subkey to obtain leaves hashes $L_i=\hashx(\ek_i)$, $i=0,\dots,T-1$.
+\item Hash each subkey to obtain leaves hashes $L_i=\hashy(\ek_i)$, $i=0,\dots,T-1$.
 \item Append to $S$ the leaf value to be hashed together with $L_{V_0}$, then the leaf value to be hashed together with $L_{V_1}$, and so on until $L_{V_{K-1}}$.
 \item Compute the parent node of each consecutive pair of leaves by doing $\hashz(L_0\Vert L_1)$, $\hashz(L_2\Vert L_3)$, and so on. Append to $S$ the sibling hash value for each of the $K$ parents of a subkey, from $V_0$ to $V_{K-1}$; $K$ hashes are thus appended to $S$.
 \item Iterate step (c) for upper levels of the tree, appending sibling nodes to $S$ to form $K$ authentication paths, until level $1 + \log C$ (that is, one level deeper than the level of the subtrees' roots in the public key).
